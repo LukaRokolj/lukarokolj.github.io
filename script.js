@@ -1,32 +1,40 @@
-about = document.getElementById("about");
-skills = document.getElementById("skills");
-technologies = document.getElementById("technologies");
-projects = document.getElementById("projects");
-news = document.getElementById("news");
-contact = document.getElementById("contact");
+const scrollElements = document.querySelectorAll(".js-scroll");
 
-function fadeOutOnScroll(element) {
-    if (!element) {
-      return;
+const elementInView = (el, dividend = 1) => {
+  const elementTop = el.getBoundingClientRect().top;
+
+  return (
+    elementTop <=
+    (window.innerHeight || document.documentElement.clientHeight) / dividend
+  );
+};
+
+const elementOutofView = (el) => {
+  const elementTop = el.getBoundingClientRect().top;
+
+  return (
+    elementTop > (window.innerHeight || document.documentElement.clientHeight)
+  );
+};
+
+const displayScrollElement = (element) => {
+  element.classList.add("scrolled");
+};
+
+const hideScrollElement = (element) => {
+  element.classList.remove("scrolled");
+};
+
+const handleScrollAnimation = () => {
+  scrollElements.forEach((el) => {
+    if (elementInView(el, 1.25)) {
+      displayScrollElement(el);
+    } else if (elementOutofView(el)) {
+      hideScrollElement(el)
     }
-    
-    var distanceToTop = window.pageYOffset + element.getBoundingClientRect().top;
-    var elementHeight = element.offsetHeight;
-    var scrollTop = document.documentElement.scrollTop;
-    
-    var opacity = 1;
-    
-    if (scrollTop > distanceToTop) {
-      opacity = 1 - (scrollTop - distanceToTop) / elementHeight;
-    }
-    
-    if (opacity >= 0) {
-      element.style.opacity = opacity;
-    }
-  }
-  
-  function scrollHandler() {
-    fadeOutOnScroll(about);
-  }
-  
-  window.addEventListener('scroll', scrollHandler)
+  })
+}
+
+window.addEventListener("scroll", () => { 
+  handleScrollAnimation();
+});
